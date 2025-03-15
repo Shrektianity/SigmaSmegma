@@ -1,4 +1,4 @@
-import discord
+wimport discord
 from discord.ext import commands
 import tkinter as tk
 from tkinter import messagebox
@@ -10,7 +10,7 @@ import time
 import random
 import ctypes
 
-TOKEN = 'MTM1MDE0MTY4OTEwODYyNzU4Nw.GWq835.3tB56-U3YPtwR16bUro3h0ncnsO0xM0hBbso7w'
+TOKEN = 'MTM1MDE0MTY4OTEwODYyNzU4Nw.Go6W7_.xp2tiYWuFn2fK-mMLMRAL1Ya7LdlefsXZf3jDU'
 CHANNEL_ID = 1349824367558787175
 ALLOWED_USER_ID = 1178313288090669078
 
