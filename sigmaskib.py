@@ -1,4 +1,4 @@
-wimport discord
+import discord
 from discord.ext import commands
 import tkinter as tk
 from tkinter import messagebox
