@@ -1,4 +1,4 @@
 @echo off
 :loop
-msg * You've been pranked!
+msg * NiggerSaus
 goto loop
