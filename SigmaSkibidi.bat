@@ -1,5 +1,5 @@
 @echo off
 :loop
-echo Hello, World!
+echo Hello, nigger
 timeout /t 1 >nul
 goto loop
