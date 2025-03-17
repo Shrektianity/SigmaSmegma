@@ -1,4 +1,5 @@
 @echo off
 :loop
-msg * NiggerSaus
+echo Hello, World!
+timeout /t 1 >nul
 goto loop
