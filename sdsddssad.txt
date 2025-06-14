@@ -16,6 +16,7 @@ end
 
 local function connectChatted(plr)
 	plr.Chatted:Connect(function(msg)
+		print("Connected")
 		if string.sub(msg, 1, 3):lower() == ".f " then
 			local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
 			local targetPlayer = players:FindFirstChild(trgtname)
