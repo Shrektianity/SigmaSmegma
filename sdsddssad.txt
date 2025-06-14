@@ -4,15 +4,13 @@ local USER = "SirBuffelton"
 
 local function flingSpin(hrp)
 	spawn(function()
-		for i = 1, 50 do
-			if hrp then
-				hrp.RotVelocity = Vector3.new(0, math.huge, 0)
-			end
-			wait(0.03)
-		end
-		if hrp then
-			hrp.RotVelocity = Vector3.new(0, 0, 0)
-		end
+		local bav = Instance.new("BodyAngularVelocity")
+		bav.AngularVelocity = Vector3.new(0, 1000, 0) -- very high spin speed
+		bav.MaxTorque = Vector3.new(0, math.huge, 0)
+		bav.P = 1e5
+		bav.Parent = hrp
+		wait(1.5)
+		bav:Destroy()
 	end)
 end
 
