@@ -54,13 +54,24 @@ local function loopTP(duration, targetPlayer)
 			local targetHRP = targetPlayer.Character.HumanoidRootPart
 			local targetPosition = targetHRP.Position
 
-			localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 2, 0))
+			local offset = localhrp.Position - targetPosition
+			local direction
+			if offset.Magnitude < 1 then
+				-- Target too close or same position, use default direction
+				direction = Vector3.new(0, 0, -1)
+			else
+				direction = offset.Unit
+			end
+
+			local safePosition = targetPosition + direction * 5 + Vector3.new(0, 0.5, 0)
+			localhrp.CFrame = CFrame.new(safePosition)
 		else
 			break
 		end
-		RunService.HeartBeat:Wait()
+		wait(0.1)
 	end
 end
+
 
 local function connectChatted(plr)
 	plr.Chatted:Connect(function(msg)
