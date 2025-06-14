@@ -2,90 +2,58 @@ local players = game:GetService("Players")
 local lplr = players.LocalPlayer
 local USER = "SirBuffelton"
 
-local function setup()
-	for _, plr in pairs(players:GetPlayers()) do
-		if plr.Name == USER then
-			plr.Chatted:Connect(function(msg)
-				if string.sub(msg, 1, 3):lower() == ".f " then
-					local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
-					local targetPlayer = players:FindFirstChild(trgtname)
-
-					if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-						local targetHRP = targetPlayer.Character.HumanoidRootPart
-						local targetPosition = targetHRP.Position
-
-						local localchar = lplr.Character or lplr.CharacterAdded:Wait()
-						local localhrp = localchar:FindFirstChild("HumanoidRootPart")
-
-						if localhrp then
-							localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 5, 0))
-
-							local bodyVelocity = Instance.new("BodyVelocity")
-							bodyVelocity.Velocity = Vector3.new(0, 500, 0)
-							bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-							bodyVelocity.P = 1e5
-							bodyVelocity.Parent = targetHRP
-							game.Debris:AddItem(bodyVelocity, 0.5)
-
-							spawn(function()
-								for i = 1, 50 do
-									if localhrp then
-										localhrp.RotVelocity = Vector3.new(0, 50, 0)
-									end
-									wait(0.03)
-								end
-								if localhrp then
-									localhrp.RotVelocity = Vector3.new(0, 0, 0)
-								end
-							end)
-						end
-					end
-				end
-			end)
+local function flingSpin(hrp)
+	spawn(function()
+		for i = 1, 50 do
+			if hrp then
+				hrp.RotVelocity = Vector3.new(0, math.huge, 0)
+			end
+			wait(0.03)
 		end
+		if hrp then
+			hrp.RotVelocity = Vector3.new(0, 0, 0)
+		end
+	end)
+end
+
+local function connectChatted(plr)
+	plr.Chatted:Connect(function(msg)
+		if string.sub(msg, 1, 3):lower() == ".f " then
+			local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
+			local targetPlayer = players:FindFirstChild(trgtname)
+
+			if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				local targetHRP = targetPlayer.Character.HumanoidRootPart
+				local targetPosition = targetHRP.Position
+
+				local localchar = lplr.Character or lplr.CharacterAdded:Wait()
+				local localhrp = localchar:FindFirstChild("HumanoidRootPart")
+
+				if localhrp then
+					localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 5, 0))
+
+					local bodyVelocity = Instance.new("BodyVelocity")
+					bodyVelocity.Velocity = Vector3.new(0, 500, 0)
+					bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+					bodyVelocity.P = 1e5
+					bodyVelocity.Parent = targetHRP
+					game.Debris:AddItem(bodyVelocity, 0.5)
+
+					flingSpin(localhrp)
+				end
+			end
+		end
+	end)
+end
+
+for _, plr in pairs(players:GetPlayers()) do
+	if plr.Name == USER then
+		connectChatted(plr)
 	end
 end
 
-setup()
-
 players.PlayerAdded:Connect(function(plr)
 	if plr.Name == USER then
-		plr.Chatted:Connect(function(msg)
-			if string.sub(msg, 1, 3):lower() == ".f " then
-				local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
-				local targetPlayer = players:FindFirstChild(trgtname)
-
-				if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-					local targetHRP = targetPlayer.Character.HumanoidRootPart
-					local targetPosition = targetHRP.Position
-
-					local localchar = lplr.Character or lplr.CharacterAdded:Wait()
-					local localhrp = localchar:FindFirstChild("HumanoidRootPart")
-
-					if localhrp then
-						localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 5, 0))
-
-						local bodyVelocity = Instance.new("BodyVelocity")
-						bodyVelocity.Velocity = Vector3.new(0, 500, 0)
-						bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-						bodyVelocity.P = 1e5
-						bodyVelocity.Parent = targetHRP
-						game.Debris:AddItem(bodyVelocity, 0.5)
-
-						spawn(function()
-							for i = 1, 50 do
-								if localhrp then
-									localhrp.RotVelocity = Vector3.new(0, 50, 0)
-								end
-								wait(0.03)
-							end
-							if localhrp then
-								localhrp.RotVelocity = Vector3.new(0, 0, 0)
-							end
-						end)
-					end
-				end
-			end
-		end)
+		connectChatted(plr)
 	end
 end)
