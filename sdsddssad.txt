@@ -55,7 +55,7 @@ local function loopTP(duration, targetPlayer)
 			local targetPosition = targetHRP.Position
 
 			local direction = (localhrp.Position - targetPosition).Unit
-			local safePosition = targetPosition + direction * 5 + Vector3.new(0, 0.5, 0)
+			local safePosition = targetPosition + direction * 1 + Vector3.new(0, 0.5, 0)
 
 			localhrp.CFrame = CFrame.new(safePosition)
 		else
