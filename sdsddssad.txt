@@ -54,10 +54,7 @@ local function loopTP(duration, targetPlayer)
 			local targetHRP = targetPlayer.Character.HumanoidRootPart
 			local targetPosition = targetHRP.Position
 
-			local direction = (localhrp.Position - targetPosition).Unit
-			local safePosition = targetPosition + direction * 1 + Vector3.new(0, 0.5, 0)
-
-			localhrp.CFrame = CFrame.new(safePosition)
+			localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 0.5, 0))
 		else
 			break
 		end
