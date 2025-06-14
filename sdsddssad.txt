@@ -12,10 +12,12 @@ local flingCoroutine
 local function fling()
 	local lp = Players.LocalPlayer
 	local c, hrp, vel, movel = nil, nil, nil, 0.1
+
 	while hiddenfling do
 		RunService.Heartbeat:Wait()
 		c = lp.Character
 		hrp = c and c:FindFirstChild("HumanoidRootPart")
+
 		if hrp then
 			vel = hrp.Velocity
 			hrp.Velocity = vel * 10000 + Vector3.new(0, 10000, 0)
@@ -41,11 +43,12 @@ local function stopFling()
 	flingCoroutine = nil
 end
 
-local function flingThroughTarget(duration, targetPlayer)
+local function loopTP(duration, targetPlayer)
 	local startTime = tick()
 	local localchar = lplr.Character or lplr.CharacterAdded:Wait()
 	local localhrp = localchar:FindFirstChild("HumanoidRootPart")
 	if not localhrp then return end
+
 	while tick() - startTime < duration do
 		if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
 			local targetHRP = targetPlayer.Character.HumanoidRootPart
@@ -109,21 +112,11 @@ local function connectChatted(plr)
 			local duration = tonumber(args[2])
 			local trgtname = args[3]
 			if duration and trgtname then
-				if trgtname == "all" then
-					for _, targetPlayer in pairs(Players:GetPlayers()) do
-						if targetPlayer ~= lplr then
-							spawn(function()
-								flingThroughTarget(duration, targetPlayer)
-							end)
-						end
-					end
-				else
-					local targetPlayer = Players:FindFirstChild(trgtname)
-					if targetPlayer then
-						spawn(function()
-							flingThroughTarget(duration, targetPlayer)
-						end)
-					end
+				local targetPlayer = Players:FindFirstChild(trgtname)
+				if targetPlayer then
+					spawn(function()
+						loopTP(duration, targetPlayer)
+					end)
 				end
 			end
 		end
