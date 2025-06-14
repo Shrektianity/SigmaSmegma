@@ -54,11 +54,11 @@ local function loopTP(duration, targetPlayer)
 			local targetHRP = targetPlayer.Character.HumanoidRootPart
 			local targetPosition = targetHRP.Position
 
-			localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 0.5, 0))
+			localhrp.CFrame = CFrame.new(targetPosition + Vector3.new(0, 2, 0))
 		else
 			break
 		end
-		wait(0.1)
+		RunService.HeartBeat:Wait()
 	end
 end
 
