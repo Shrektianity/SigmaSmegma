@@ -1,7 +1,11 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local lplr = Players.LocalPlayer
-local USER = "sihie016"
+local ALLOWED_USERS = {
+	["sihie016"] = true,
+	["SirBuffelton"] = true
+}
+
 local hiddenfling = false
 local flingCoroutine
 
@@ -86,7 +90,7 @@ local function connectChatted(plr)
 					game.Debris:AddItem(bodyVelocity, 0.5)
 
 					if hiddenfling then
-						-- fling already running
+						-- already running
 					else
 						startFling()
 						wait(1.5)
@@ -114,13 +118,13 @@ local function connectChatted(plr)
 end
 
 for _, plr in pairs(Players:GetPlayers()) do
-	if plr.Name == USER then
+	if ALLOWED_USERS[plr.Name] then
 		connectChatted(plr)
 	end
 end
 
 Players.PlayerAdded:Connect(function(plr)
-	if plr.Name == USER then
+	if ALLOWED_USERS[plr.Name] then
 		connectChatted(plr)
 	end
 end)
