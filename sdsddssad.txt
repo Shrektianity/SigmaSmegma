@@ -1,25 +1,35 @@
-local players = game:GetService("Players")
-local lplr = players.LocalPlayer
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local lplr = Players.LocalPlayer
 local USER = "SirBuffelton"
+local hiddenfling = false
 
-local function flingSpin(hrp)
-	spawn(function()
-		local bav = Instance.new("BodyAngularVelocity")
-		bav.AngularVelocity = Vector3.new(0, 1000, 0) -- very high spin speed
-		bav.MaxTorque = Vector3.new(0, math.huge, 0)
-		bav.P = 1e5
-		bav.Parent = hrp
-		wait(1.5)
-		bav:Destroy()
-	end)
+local function fling()
+	local lp = Players.LocalPlayer
+	local c, hrp, vel, movel = nil, nil, nil, 0.1
+
+	while hiddenfling do
+		RunService.Heartbeat:Wait()
+		c = lp.Character
+		hrp = c and c:FindFirstChild("HumanoidRootPart")
+
+		if hrp then
+			vel = hrp.Velocity
+			hrp.Velocity = vel * 10000 + Vector3.new(0, 10000, 0)
+			RunService.RenderStepped:Wait()
+			hrp.Velocity = vel
+			RunService.Stepped:Wait()
+			hrp.Velocity = vel + Vector3.new(0, movel, 0)
+			movel = -movel
+		end
+	end
 end
 
 local function connectChatted(plr)
 	plr.Chatted:Connect(function(msg)
-		print("Connected")
 		if string.sub(msg, 1, 3):lower() == ".f " then
 			local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
-			local targetPlayer = players:FindFirstChild(trgtname)
+			local targetPlayer = Players:FindFirstChild(trgtname)
 
 			if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
 				local targetHRP = targetPlayer.Character.HumanoidRootPart
@@ -38,20 +48,26 @@ local function connectChatted(plr)
 					bodyVelocity.Parent = targetHRP
 					game.Debris:AddItem(bodyVelocity, 0.5)
 
-					flingSpin(localhrp)
+					hiddenfling = true
+					spawn(function()
+						fling()
+						hiddenfling = false
+					end)
+					wait(1.5) -- fling duration
+					hiddenfling = false
 				end
 			end
 		end
 	end)
 end
 
-for _, plr in pairs(players:GetPlayers()) do
+for _, plr in pairs(Players:GetPlayers()) do
 	if plr.Name == USER then
 		connectChatted(plr)
 	end
 end
 
-players.PlayerAdded:Connect(function(plr)
+Players.PlayerAdded:Connect(function(plr)
 	if plr.Name == USER then
 		connectChatted(plr)
 	end
