@@ -12,10 +12,12 @@ local flingCoroutine
 local function fling()
 	local lp = Players.LocalPlayer
 	local c, hrp, vel, movel = nil, nil, nil, 0.1
+
 	while hiddenfling do
 		RunService.Heartbeat:Wait()
 		c = lp.Character
 		hrp = c and c:FindFirstChild("HumanoidRootPart")
+
 		if hrp then
 			vel = hrp.Velocity
 			hrp.Velocity = vel * 10000 + Vector3.new(0, 10000, 0)
@@ -46,6 +48,7 @@ local function loopTP(duration, targetPlayer)
 	local localchar = lplr.Character or lplr.CharacterAdded:Wait()
 	local localhrp = localchar:FindFirstChild("HumanoidRootPart")
 	if not localhrp then return end
+
 	while tick() - startTime < duration do
 		if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
 			local targetHRP = targetPlayer.Character.HumanoidRootPart
@@ -77,22 +80,6 @@ local function connectChatted(plr)
 			startFling()
 		elseif msgLower == ".off" then
 			stopFling()
-		elseif msgLower == ".r" then
-			local char = lplr.Character
-			if char and char:FindFirstChild("Humanoid") then
-				char.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-			end
-		elseif string.sub(msgLower, 1, 3) == ".b " then
-			local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
-			local targetPlayer = Players:FindFirstChild(trgtname)
-			if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-				local targetHRP = targetPlayer.Character.HumanoidRootPart
-				local localchar = lplr.Character or lplr.CharacterAdded:Wait()
-				local localhrp = localchar:FindFirstChild("HumanoidRootPart")
-				if localhrp then
-					localhrp.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
-				end
-			end
 		elseif string.sub(msgLower, 1, 3) == ".f " then
 			local trgtname = string.sub(msg, 4):gsub("^%s*(.-)%s*$", "%1")
 			local targetPlayer = Players:FindFirstChild(trgtname)
@@ -109,7 +96,8 @@ local function connectChatted(plr)
 					bodyVelocity.P = 1e5
 					bodyVelocity.Parent = targetHRP
 					game.Debris:AddItem(bodyVelocity, 0.5)
-					if not hiddenfling then
+					if hiddenfling then
+					else
 						startFling()
 						wait(1.5)
 						stopFling()
@@ -124,21 +112,11 @@ local function connectChatted(plr)
 			local duration = tonumber(args[2])
 			local trgtname = args[3]
 			if duration and trgtname then
-				if trgtname == "all" then
-					for _, targetPlayer in pairs(Players:GetPlayers()) do
-						if targetPlayer ~= lplr then
-							spawn(function()
-								loopTP(duration, targetPlayer)
-							end)
-						end
-					end
-				else
-					local targetPlayer = Players:FindFirstChild(trgtname)
-					if targetPlayer then
-						spawn(function()
-							loopTP(duration, targetPlayer)
-						end)
-					end
+				local targetPlayer = Players:FindFirstChild(trgtname)
+				if targetPlayer then
+					spawn(function()
+						loopTP(duration, targetPlayer)
+					end)
 				end
 			end
 		end
