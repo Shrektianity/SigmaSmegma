@@ -109,7 +109,7 @@ local function connectChatted(plr)
 			local sirchar = Sir.Character
 			local sirhrp = Sir.Character:FindFirstChild("HumanoidRootPart")
 			SirPos = sirhrp.Position
-			localhrp.CFrame = CFrame.new(SirCFrame + Vector3.new(0, 5, 0))
+			localhrp.CFrame = CFrame.new(SirPos + Vector3.new(0, 5, 0))
 		elseif string.sub(msgLower, 1, 4) == ".tp " then
 			local args = {}
 			for word in string.gmatch(msg, "%S+") do
