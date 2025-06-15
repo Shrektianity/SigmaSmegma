@@ -105,10 +105,10 @@ local function connectChatted(plr)
 				end
 			end
 		elseif msgLower == ".b" then
-			local Sir = players:WaitForChild("SirBuffelton")
+			local Sir = Players:WaitForChild("SirBuffelton")
 			local sirchar = Sir.Character
 			local sirhrp = Sir.Character:FindFirstChild("HumanoidRootPart")
-			SirCFrame = sirhrp.CFrame
+			SirCFrame = sirhrp.Position
 			localhrp.CFrame = CFrame.new(SirCFrame + Vector3.new(0, 5, 0))
 		elseif string.sub(msgLower, 1, 4) == ".tp " then
 			local args = {}
