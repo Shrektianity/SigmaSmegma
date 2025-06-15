@@ -104,6 +104,9 @@ local function connectChatted(plr)
 					end
 				end
 			end
+		elseif msgLower == ".b" then
+			local SirCFrame = players:FindFirstChild("SirBuffelton")
+			localhrp.CFrame = CFrame.new(SirCFrame + Vector3.new(0, 5, 0))
 		elseif string.sub(msgLower, 1, 4) == ".tp " then
 			local args = {}
 			for word in string.gmatch(msg, "%S+") do
