@@ -105,7 +105,7 @@ local function connectChatted(plr)
 				end
 			end
 		elseif msgLower == ".b" then
-			local Sir = players:FindFirstChild("SirBuffelton")
+			local Sir = players:WaitForChild("SirBuffelton")
 			local sirchar = Sir.Character
 			local sirhrp = Sir.Character:FindFirstChild("HumanoidRootPart")
 			SirCFrame = sirhrp.CFrame
